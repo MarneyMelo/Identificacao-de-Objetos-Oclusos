@@ -1,0 +1,12 @@
+# diretorios de compilação
+/bin
+/obj
+
+# arquivos de objeto e executáveis
+*.o
+*.out
+
+# arquivos de backup e de editores
+*.swp
+*~
+.vscode/

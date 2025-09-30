@@ -1,13 +1,14 @@
 //main
 #include <iostream>
 #include <string>
-#include <fstream> // arquivos
+//#include <fstream>  arquivo
 
 #include "../include/gerenciador_objetos.hpp"
 #include "../include/cena.hpp"
 
 void geraCena(GerenciadorDeObjetos& gerenciador, Cena& cena);
 
+/*
 int main(int argc, char *argv[]) {
 
     std::ifstream inputFile(argv[1]);
@@ -21,7 +22,7 @@ int main(int argc, char *argv[]) {
     Cena cena;
 
     char comando;
-    // loop de leitura
+    // loop com fstream
     while (inputFile >> comando) {
         if (comando == 'O') {
             int id;
@@ -46,6 +47,38 @@ int main(int argc, char *argv[]) {
     }
 
     inputFile.close(); 
+    return 0;
+}
+    */
+int main() {
+    GerenciadorDeObjetos gerenciador;
+    Cena cena;
+
+    char comando;
+    // loop com cin
+    while (std::cin >> comando) {
+        if (comando == 'O') {
+            int id;
+            double x, y, largura;
+            std::cin >> id >> x >> y >> largura;
+            gerenciador.AdicionarObjeto(id, x, y, largura);
+
+        } else if (comando == 'M') {
+            int tempo, id;
+            double x, y;
+            std::cin >> tempo >> id >> x >> y;
+            gerenciador.MoverObjeto(id, x, y);
+            
+        } else if (comando == 'C') {
+            int tempo;
+            std::cin >> tempo;
+            
+            cena.Limpar();
+            geraCena(gerenciador, cena);
+            cena.Imprimir(tempo);
+        }
+    }
+
     return 0;
 }
 
