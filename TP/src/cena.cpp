@@ -7,7 +7,9 @@ objetos (ou parte deles) numa cena e gravar a cena (colocar num arquivo de saíd
 */
 
 #include "../include/cena.hpp"
+#include "../include/algoritmos.hpp"
 #include <iostream>
+#include <iomanip>
 
 Cena::Cena() {
     this->num_segmentos_atual = 0;
@@ -31,11 +33,17 @@ bool Cena::AdicionarSegmento(int id, double inicio, double fim) {
 }
 
 void Cena::Imprimir(int tempo) const {
-    for (int i = 0; i < num_segmentos_atual; i++) {
+    SegmentoVisivel* segmentos = const_cast<SegmentoVisivel*>(this->array_de_segmentos);
+    int num_segmentos = this->num_segmentos_atual;
+
+    MergeSortSegmentos(segmentos, num_segmentos);
+
+    for (int i = 0; i < num_segmentos; i++) {
         // formato: S <tempo> <objeto> <inicio> <fim>
         std::cout << "S " << tempo << " " 
-                  << array_de_segmentos[i].id_obj << " "
-                  << array_de_segmentos[i].inicio << " "
-                  << array_de_segmentos[i].fim << std::endl;
+                  << segmentos[i].id_obj << " "
+                  << std::fixed << std::setprecision(2) 
+                  << segmentos[i].inicio << " "
+                  << segmentos[i].fim << std::endl;
     }
 }

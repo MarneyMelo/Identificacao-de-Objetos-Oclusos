@@ -9,7 +9,8 @@ EXECUTABLE = bin/tp1.out
 SOURCES = src/main.cpp \
           src/objeto.cpp \
           src/gerenciador_objetos.cpp \
-          src/cena.cpp
+          src/cena.cpp \
+		  src/algoritmos.cpp
 
 # gera os nomes dos arquivos de objeto (.o) a partir da lista SOURCES
 OBJECTS = $(SOURCES:src/%.cpp=obj/%.o)

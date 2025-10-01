@@ -1,5 +1,5 @@
 #include "../include/gerenciador_objetos.hpp"
-#include <iostream> // Apenas para erros
+#include <iostream>
 
 GerenciadorDeObjetos::GerenciadorDeObjetos() {
     this->num_objetos_atual = 0;
@@ -24,7 +24,7 @@ bool GerenciadorDeObjetos::MoverObjeto(int id, double novo_x, double novo_y) {
             return true; // encontrou e moveu com sucesso
         }
     }
-    return false; // obj nao encontrado
+    return false; // obj n encontrado
 }
 
 Objeto* GerenciadorDeObjetos::GetArray() {

@@ -38,8 +38,7 @@ void Objeto::AtualizaPosicao(double novo_x, double novo_y) {
     this->posFinal = novo_x + (this->largura / 2.0);
 }
 
-// -- Getters ---
-
+//getters
 int Objeto::GetId() const {
     return this->id_obj;
 }
