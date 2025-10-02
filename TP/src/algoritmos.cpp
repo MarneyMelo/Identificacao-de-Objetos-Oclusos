@@ -21,151 +21,225 @@ void InsertionSort(Objeto* arr, int tamanho) {
 // ESTRATÉGIA 2: MERGE SORT
 // -------------------------
 
-void merge(Objeto* array, int const left, int const mid, int const right) {
-    auto const subArrayOne = mid - left + 1;
-    auto const subArrayTwo = right - mid;
+// Merges two subarrays of arr[].
+// First subarray is arr[left..mid]
+// Second subarray is arr[mid+1..right]
+void merge(Objeto* arr, int left, int mid, int right)
+{
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
 
-    Objeto* leftArray = new Objeto[subArrayOne];
-    Objeto* rightArray = new Objeto[subArrayTwo];
+    // Create temp arrays (using new/delete instead of vector)
+    Objeto* L = new Objeto[n1];
+    Objeto* R = new Objeto[n2];
 
-    for (auto i = 0; i < subArrayOne; i++)
-        leftArray[i] = array[left + i];
-    for (auto j = 0; j < subArrayTwo; j++)
-        rightArray[j] = array[mid + 1 + j];
+    // Copy data to temp arrays L[] and R[]
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
 
-    auto indexOfSubArrayOne = 0, indexOfSubArrayTwo = 0;
-    int indexOfMergedArray = left;
+    int i = 0, j = 0;
+    int k = left;
 
-    while (indexOfSubArrayOne < subArrayOne && indexOfSubArrayTwo < subArrayTwo) {
-        if (leftArray[indexOfSubArrayOne].GetY() <= rightArray[indexOfSubArrayTwo].GetY()) {
-            array[indexOfMergedArray] = leftArray[indexOfSubArrayOne];
-            indexOfSubArrayOne++;
-        } else {
-            array[indexOfMergedArray] = rightArray[indexOfSubArrayTwo];
-            indexOfSubArrayTwo++;
+    // Merge the temp arrays back 
+    // into arr[left..right]
+    while (i < n1 && j < n2) {
+        // --- ADAPTAÇÃO NECESSÁRIA #1 ---
+        // A comparação é feita pela coordenada Y do Objeto
+        if (L[i].GetY() <= R[j].GetY()) {
+            arr[k] = L[i];
+            i++;
         }
-        indexOfMergedArray++;
+        else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
     }
 
-    while (indexOfSubArrayOne < subArrayOne) {
-        array[indexOfMergedArray] = leftArray[indexOfSubArrayOne];
-        indexOfSubArrayOne++;
-        indexOfMergedArray++;
+    // Copy the remaining elements of L[], 
+    // if there are any
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
     }
-    while (indexOfSubArrayTwo < subArrayTwo) {
-        array[indexOfMergedArray] = rightArray[indexOfSubArrayTwo];
-        indexOfSubArrayTwo++;
-        indexOfMergedArray++;
+
+    // Copy the remaining elements of R[], 
+    // if there are any
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
     }
-    delete[] leftArray;
-    delete[] rightArray;
+    
+    // Free the memory
+    delete[] L;
+    delete[] R;
 }
 
-void mergeSortRecursive(Objeto* array, int const begin, int const end) {
-    if (begin >= end)
+// begin is for left index and end is right index
+// of the sub-array of arr to be sorted
+void mergeSort(Objeto* arr, int left, int right)
+{
+    if (left >= right)
         return;
 
-    auto mid = begin + (end - begin) / 2;
-    mergeSortRecursive(array, begin, mid);
-    mergeSortRecursive(array, mid + 1, end);
-    merge(array, begin, mid, end);
+    int mid = left + (right - left) / 2;
+    mergeSort(arr, left, mid);
+    mergeSort(arr, mid + 1, right);
+    merge(arr, left, mid, right);
 }
 
-void MergeSort(Objeto* arr, int tamanho) {
-    mergeSortRecursive(arr, 0, tamanho - 1);
+// Função a ser chamada
+void MergeSort(Objeto* arr, int size) 
+{
+    // O tipo do array é Objeto* e o tamanho é 'size'.
+    if (size > 1) {
+        mergeSort(arr, 0, size - 1);
+    }
 }
-
-
 // -----------------------------
 // ESTRATÉGIA 3: QUICK SORT
 // ------------------------------------
 
-void TrocarObjetos(Objeto& a, Objeto& b) {
+// A função para troca
+void swap(Objeto& a, Objeto& b) 
+{
     Objeto temp = a;
     a = b;
     b = temp;
 }
 
-int particao(Objeto* arr, int baixo, int alto) {
-    Objeto pivo = arr[alto];
-    int i = (baixo - 1);
+int partition(Objeto* arr, int low, int high) 
+{
+    // choose the pivot
+    Objeto pivot = arr[high];
 
-    for (int j = baixo; j <= alto - 1; j++) {
-        if (arr[j].GetY() <= pivo.GetY()) {
+    // index of smaller element and indicates 
+    // the right position of pivot found so far
+    int i = low - 1;
+
+    // Traverse arr[low..high] and move all smaller
+    // elements on left side. Elements from low to 
+    // i are smaller after every iteration
+    for (int j = low; j <= high - 1; j++) {
+        // ADAPTAÇÃO 1
+        // A comparação é feita pela coordenada Y do Objeto
+        if (arr[j].GetY() < pivot.GetY()) {
             i++;
-            TrocarObjetos(arr[i], arr[j]); 
+            swap(arr[i], arr[j]);
         }
     }
-    TrocarObjetos(arr[i + 1], arr[alto]);
-    return (i + 1);
+    
+    // move pivot after smaller elements and
+    // return its position
+    swap(arr[i + 1], arr[high]);  
+    return i + 1;
 }
 
-// func recursiva principal do QuickSort
-void quickSortRecursivo(Objeto* arr, int baixo, int alto) {
-    if (baixo < alto) {
-        int pi = particao(arr, baixo, alto);
-        quickSortRecursivo(arr, baixo, pi - 1);
-        quickSortRecursivo(arr, pi + 1, alto);
+// the QuickSort function implementation
+void quickSort(Objeto* arr, int low, int high) 
+{
+    if (low < high) {
+        
+        // pi is the partition return index of pivot
+        int pi = partition(arr, low, high);
+
+        // recursion calls for smaller elements
+        // and greater or equals elements
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
     }
 }
 
-// func de fachada para iniciar o QuickSort
-void QuickSort(Objeto* arr, int tamanho) {
-    quickSortRecursivo(arr, 0, tamanho - 1);
+// Função a ser chamada
+void QuickSort(Objeto* arr, int size) 
+{
+    if (size > 1) {
+        quickSort(arr, 0, size - 1);
+    }
 }
+
 
 //ordenar a saida
-void mergeSegmentos(SegmentoVisivel* array, int const left, int const mid, int const right) {
-    auto const subArrayOne = mid - left + 1;
-    auto const subArrayTwo = right - mid;
+// Merges two subarrays of arr[].
+// First subarray is arr[left..mid]
+// Second subarray is arr[mid+1..right]
+// Merges two subarrays of arr[].
+// First subarray is arr[left..mid]
+// Second subarray is arr[mid+1..right]
+void mergeSegmentos(SegmentoVisivel* arr, int left, int mid, int right)
+{
+    // Create sizes of two subarrays to be merged
+    int const n1 = mid - left + 1;
+    int const n2 = right - mid;
 
-    SegmentoVisivel* leftArray = new SegmentoVisivel[subArrayOne];
-    SegmentoVisivel* rightArray = new SegmentoVisivel[subArrayTwo];
+    // Create temp arrays
+    SegmentoVisivel* L = new SegmentoVisivel[n1];
+    SegmentoVisivel* R = new SegmentoVisivel[n2];
 
-    for (auto i = 0; i < subArrayOne; i++)
-        leftArray[i] = array[left + i];
-    for (auto j = 0; j < subArrayTwo; j++)
-        rightArray[j] = array[mid + 1 + j];
+    // Copy data to temp arrays L[] and R[]
+    for (int i = 0; i < n1; i++)
+        L[i] = arr[left + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = arr[mid + 1 + j];
 
-    auto indexOfSubArrayOne = 0, indexOfSubArrayTwo = 0;
-    int indexOfMergedArray = left;
+    // Initial indexes
+    int i = 0; // Initial index of first subarray
+    int j = 0; // Initial index of second subarray
+    int k = left; // Initial index of merged subarray
 
-    while (indexOfSubArrayOne < subArrayOne && indexOfSubArrayTwo < subArrayTwo) {
-        // A ÚNICA MUDANÇA É AQUI: compara pelo id_obj
-        if (leftArray[indexOfSubArrayOne].id_obj <= rightArray[indexOfSubArrayTwo].id_obj) {
-            array[indexOfMergedArray] = leftArray[indexOfSubArrayOne];
-            indexOfSubArrayOne++;
-        } else {
-            array[indexOfMergedArray] = rightArray[indexOfSubArrayTwo];
-            indexOfSubArrayTwo++;
+    // Merge the temp arrays back into arr[left..right]
+    while (i < n1 && j < n2) {
+        // --- ADAPTAÇÃO NECESSÁRIA #1 ---
+        // A comparação é feita pelo ID do objeto do SegmentoVisivel.
+        if (L[i].id_obj <= R[j].id_obj) {
+            arr[k] = L[i];
+            i++;
         }
-        indexOfMergedArray++;
+        else {
+            arr[k] = R[j];
+            j++;
+        }
+        k++;
     }
 
-    while (indexOfSubArrayOne < subArrayOne) {
-        array[indexOfMergedArray] = leftArray[indexOfSubArrayOne];
-        indexOfSubArrayOne++;
-        indexOfMergedArray++;
+    // Copy the remaining elements of L[], if there are any
+    while (i < n1) {
+        arr[k] = L[i];
+        i++;
+        k++;
     }
-    while (indexOfSubArrayTwo < subArrayTwo) {
-        array[indexOfMergedArray] = rightArray[indexOfSubArrayTwo];
-        indexOfSubArrayTwo++;
-        indexOfMergedArray++;
+
+    // Copy the remaining elements of R[], if there are any
+    while (j < n2) {
+        arr[k] = R[j];
+        j++;
+        k++;
     }
-    delete[] leftArray;
-    delete[] rightArray;
+
+    delete[] L;
+    delete[] R;
 }
 
-void mergeSortSegmentosRecursive(SegmentoVisivel* array, int const begin, int const end) {
-    if (begin >= end)
-        return;
+// Main recursive function that sorts arr[left..right] using the merge() helper.
+void mergeSortSegmentos(SegmentoVisivel* arr, int left, int right)
+{
+    if (left >= right)
+        return; // Base case
 
-    auto mid = begin + (end - begin) / 2;
-    mergeSortSegmentosRecursive(array, begin, mid);
-    mergeSortSegmentosRecursive(array, mid + 1, end);
-    mergeSegmentos(array, begin, mid, end);
+    int mid = left + (right - left) / 2;
+    mergeSortSegmentos(arr, left, mid);
+    mergeSortSegmentos(arr, mid + 1, right);
+    mergeSegmentos(arr, left, mid, right);
 }
 
-void MergeSortSegmentos(SegmentoVisivel* arr, int tamanho) {
-    mergeSortSegmentosRecursive(arr, 0, tamanho - 1);
+// Função a ser chamada
+void MergeSortSegmentos(SegmentoVisivel* arr, int size) 
+{
+    if (size > 1) {
+        mergeSortSegmentos(arr, 0, size - 1);
+    }
 }
