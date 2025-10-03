@@ -1,7 +1,7 @@
 //main
 #include <iostream>
 #include <string>
-//#include <fstream>  arquivo
+#include <fstream>  arquivo
 
 #include "../include/gerenciador_objetos.hpp"
 #include "../include/cena.hpp"
@@ -51,11 +51,21 @@ int main(int argc, char *argv[]) {
     inputFile.close(); 
     return 0;
 }
-    */
+    *//*
 int main() {
     GerenciadorDeObjetos gerenciador;
     Cena cena;
-
+*/
+int main(int argc, char *argv[]) {
+    // Verifica se o argumento do limiar foi passado
+    if (argc < 2) {
+        std::cerr << "Erro: Forneca o limiar como argumento na linha de comando." << std::endl;
+        std::cerr << "Uso: " << argv[0] << " <limiar>" << std::endl;
+        return 1; // Termina com erro
+    }
+    GerenciadorDeObjetos gerenciador;
+    Cena cena;
+    int limiar = std::atoi(argv[1]);
     char comando;
     // loop com cin
     while (std::cin >> comando) {
@@ -69,12 +79,10 @@ int main() {
             int tempo, id;
             double x, y;
             std::cin >> tempo >> id >> x >> y;
-            gerenciador.MoverObjeto(id, x, y);
-            /*
-            DESCOMENTAR AQ PARA ESTRATEGIA 1 (ORDENAR A CADA MOVIMENTAÇÃO)
-            if (gerenciador.MoverObjeto(id, x, y)) {
+            gerenciador.MoverObjeto(id, x, y, limiar);
+            /*if (gerenciador.MoverObjeto(id, x, y, 0)) { // Limiar 0 aqui para não reordenar 2x
                 InsertionSort(gerenciador.GetArray(), gerenciador.GetNumObjetos());
-            }*/
+    }*/
         } else if (comando == 'C') {
             int tempo;
             std::cin >> tempo;                
@@ -83,7 +91,7 @@ int main() {
             cena.Imprimir(tempo);
         }
     }
-
+    std::cerr << "TEMPO_ORDENACAO_NS:" << tempo_total_ordenacao_ns << std::endl;
     return 0;
 }
 
@@ -97,8 +105,8 @@ void geraCena(GerenciadorDeObjetos& gerenciador, Cena& cena) {
     }
 
     // ordena em Y {quicksort e mergesort para estratégia 2 - ordernar ao fim}
-    QuickSort(objetos, num_objetos); 
-    //MergeSort(objetos, num_objetos);
+    //QuickSort(objetos, num_objetos); 
+    MergeSort(objetos, num_objetos);
 
     // calcula a oclusão
 

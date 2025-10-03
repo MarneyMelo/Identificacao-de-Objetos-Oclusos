@@ -1,9 +1,13 @@
 #include "../include/algoritmos.hpp"
 
+#include <chrono> // Para medição de tempo
+
+// Variável global para acumular o tempo gasto apenas nas ordenações
+long long tempo_total_ordenacao_ns = 0; 
 // ---------------------------
 // ESTRATÉGIA 1: INSERTION SORT
 // ----------------------------
-
+/*
 void InsertionSort(Objeto* arr, int tamanho) {
     for (int i = 1; i < tamanho; i++) {
         Objeto key = arr[i];
@@ -15,6 +19,39 @@ void InsertionSort(Objeto* arr, int tamanho) {
         }
         arr[j + 1] = key;
     }
+}
+*/
+
+// Em src/algoritmos.cpp
+
+void InsertionSort(Objeto* arr, int n) 
+{
+    // 1. Inicia o cronômetro
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // --- Início do Algoritmo Original ---
+    int i, j;
+    Objeto key;
+    for (i = 1; i < n; i++) 
+    {
+        key = arr[i];
+        j = i - 1;
+
+        while (j >= 0 && arr[j].GetY() > key.GetY()) 
+        {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = key;
+    }
+    // --- Fim do Algoritmo Original ---
+
+    // 2. Para o cronômetro
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    // 3. Calcula a duração e adiciona ao acumulador global
+    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
+    tempo_total_ordenacao_ns += duration.count();
 }
 
 //-------------------------
@@ -93,12 +130,32 @@ void mergeSort(Objeto* arr, int left, int right)
 }
 
 // Função a ser chamada
+/*
 void MergeSort(Objeto* arr, int size) 
 {
     // O tipo do array é Objeto* e o tamanho é 'size'.
     if (size > 1) {
         mergeSort(arr, 0, size - 1);
     }
+}*/
+
+// Facade function to provide a simple interface to the user.
+void MergeSort(Objeto* arr, int size) 
+{
+    // 1. Inicia o cronômetro
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // Lógica original do algoritmo
+    if (size > 1) {
+        mergeSort(arr, 0, size - 1);
+    }
+
+    // 2. Para o cronômetro
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    // 3. Calcula a duração e adiciona ao acumulador global
+    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
+    tempo_total_ordenacao_ns += duration.count();
 }
 // -----------------------------
 // ESTRATÉGIA 3: QUICK SORT
@@ -154,14 +211,34 @@ void quickSort(Objeto* arr, int low, int high)
     }
 }
 
-// Função a ser chamada
-void QuickSort(Objeto* arr, int size) 
+// Função a ser chamada 
+/*void QuickSort(Objeto* arr, int size) 
 {
     if (size > 1) {
         quickSort(arr, 0, size - 1);
     }
 }
+*/
 
+void QuickSort(Objeto* arr, int size) 
+{
+    // Inicia o cronômetro
+    auto start = std::chrono::high_resolution_clock::now();
+
+    // Executa o algoritmo de ordenação
+    if (size > 1) {
+        quickSort(arr, 0, size - 1); // A função recursiva interna
+    }
+
+    // Para o cronômetro
+    auto stop = std::chrono::high_resolution_clock::now();
+
+    // Calcula a duração em nanissegundos
+    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(stop - start);
+
+    // Adiciona a duração ao nosso acumulador global
+    tempo_total_ordenacao_ns += duration.count();
+}
 
 //ordenar a saida
 // Merges two subarrays of arr[].

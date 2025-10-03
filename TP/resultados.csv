@@ -1,0 +1,7 @@
+Arquivo,Limiar,TempoTotal(s),TempoOrdenacao(ns)
+testes/exp3_N100_M5000_C100_freq_media.txt,1,0.04,6220083
+testes/exp3_N100_M5000_C100_freq_media.txt,50,0.04,6424347
+testes/exp3_N100_M5000_C100_freq_media.txt,0,0.03,5478208
+testes/exp2_N1000_M5000_C500_freq_baixa.txt,1,3.57,3434982339
+testes/exp2_N1000_M5000_C500_freq_baixa.txt,500,3.25,3121401799
+testes/exp2_N1000_M5000_C500_freq_baixa.txt,0,3.19,3071315768

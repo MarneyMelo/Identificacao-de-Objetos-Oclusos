@@ -4,6 +4,8 @@
 #include "objeto.hpp"
 #include "cena.hpp"
 
+extern long long tempo_total_ordenacao_ns;
+
 // estrategia 1: ordenar a cada movimentação
 void InsertionSort(Objeto* arr, int tamanho);
 
