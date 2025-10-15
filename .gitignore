@@ -1,6 +1,10 @@
 # diretorios de compilação
-/bin
-/obj
+/bin/*
+/obj/*
+
+# não ignora gitkeep
+!bin/.gitkeep
+!obj/.gitkeep
 
 # arquivos de objeto e executáveis
 *.o
