@@ -8,7 +8,7 @@ O objetivo é processar uma cena com vários objetos e determinar exatamente qua
 
 ## Análise Experimental
 
-Uma parte significativa do escopo original do trabalho era a condução de uma análise experimental para comparar o desempenho de diferentes estratégias de ordenação (`Insertion Sort` vs. `Quick Sort` e `Merge Sort`). Embora essa análise tenha sido projetada, os scripts de automação e o código específico para a coleta de métricas não estão incluídos neste repositório, que foca na implementação limpa do algoritmo principal de oclusão.
+Uma parte significativa do escopo original do trabalho era a condução de uma análise experimental para comparar o desempenho de diferentes estratégias de ordenação (`Insertion Sort` vs. `Quick Sort` e `Merge Sort`). Embora essa análise tenha sido feita, os scripts de automação e o código específico para a coleta de métricas não estão incluídos neste repositório, que foca na implementação limpa do algoritmo principal de oclusão.
 
 ## Tecnologias Utilizadas
 
